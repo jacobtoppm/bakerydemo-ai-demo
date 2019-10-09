@@ -1,0 +1,3 @@
+[submodule "wagtail-content-import"]
+	path = wagtail-content-import
+	url = git@github.com:torchbox/wagtail-content-import.git
