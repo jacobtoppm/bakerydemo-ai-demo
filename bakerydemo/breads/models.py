@@ -82,11 +82,35 @@ class BreadType(models.Model):
     class Meta:
         verbose_name_plural = "Bread types"
 
+from wagtail_content_import.models import ContentImportMixin
+from wagtail_content_import.mappers.streamfield import StreamFieldMapper
+from wagtail.core.rich_text import RichText
+from wagtail_content_import.mappers.utils import import_image_from_url
 
-class BreadPage(Page):
+def para(block):
+    return ('paragraph_block', RichText(block['value']))
+
+def head(block):
+    return ('heading_block', {'heading_text': block['value'], 'size': 'h2'})
+
+def im(block):
+    return ('image_block', {'image': import_image_from_url(block['value']), 'caption': '', 'attribution': ''})
+
+class NewMapper(StreamFieldMapper):
+
+    type_to_conversion_function_dict = {
+        'html': para,
+        'heading': head,
+        'image': im,
+    }
+
+class BreadPage(ContentImportMixin, Page):
     """
     Detail view for a specific bread
     """
+
+    mapper_class = NewMapper
+
     introduction = models.TextField(
         help_text='Text to describe the page',
         blank=True)
