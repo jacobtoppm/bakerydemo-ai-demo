@@ -13,6 +13,13 @@ from wagtail.search import index
 from wagtail.snippets.models import register_snippet
 from wagtail.images.edit_handlers import ImageChooserPanel
 
+from wagtail_content_import.models import ContentImportMixin
+from wagtail.core import blocks
+from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
+from wagtail.images.blocks import ImageChooserBlock
+from wagtail.contrib.table_block.blocks import TableBlock
+from .mappers import SimpleBreadMapper
+
 from bakerydemo.base.blocks import BaseStreamBlock
 
 
@@ -82,34 +89,24 @@ class BreadType(models.Model):
     class Meta:
         verbose_name_plural = "Bread types"
 
-from wagtail_content_import.models import ContentImportMixin
-from wagtail_content_import.mappers.streamfield import StreamFieldMapper
-from wagtail.core.rich_text import RichText
-from wagtail_content_import.mappers.utils import import_image_from_url
 
-def para(block):
-    return ('paragraph_block', RichText(block['value']))
+class SimpleBreadPage(ContentImportMixin, Page):
+    mapper_class = SimpleBreadMapper
 
-def head(block):
-    return ('heading_block', {'heading_text': block['value'], 'size': 'h2'})
+    body = StreamField([
+        ('heading', blocks.CharBlock(classname="full title")),
+        ('paragraph', blocks.RichTextBlock()),
+        ('image', ImageChooserBlock()),
+        ('table', TableBlock())
+    ])
 
-def im(block):
-    return ('image_block', {'image': import_image_from_url(block['value']), 'caption': '', 'attribution': ''})
+    content_panels = Page.content_panels + [
+        StreamFieldPanel('body')]
 
-class NewMapper(StreamFieldMapper):
-
-    type_to_conversion_function_dict = {
-        'html': para,
-        'heading': head,
-        'image': im,
-    }
-
-class BreadPage(ContentImportMixin, Page):
+class BreadPage(Page):
     """
     Detail view for a specific bread
     """
-
-    mapper_class = NewMapper
 
     introduction = models.TextField(
         help_text='Text to describe the page',
@@ -199,7 +196,7 @@ class BreadsIndexPage(Page):
     ]
 
     # Can only have BreadPage children
-    subpage_types = ['BreadPage']
+    subpage_types = ['BreadPage', 'SimpleBreadPage']
 
     # Returns a queryset of BreadPage objects that are live, that are direct
     # descendants of this index page with most recent first

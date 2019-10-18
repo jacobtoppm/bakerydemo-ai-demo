@@ -39,7 +39,7 @@ INSTALLED_APPS = [
 
     'wagtail_content_import',
     'wagtail_content_import.pickers.google',
-
+    "wagtail.contrib.table_block",
     'wagtail.contrib.search_promotions',
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
