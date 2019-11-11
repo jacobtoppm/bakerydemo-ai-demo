@@ -9,12 +9,16 @@ from .base import *  # noqa: F403
 
 DEBUG = os.getenv('DJANGO_DEBUG', 'off') == 'on'
 
+GOOGLE_OAUTH_CLIENT_CONFIG = os.getenv('GOOGLE_OAUTH_CLIENT_CONFIG')
+GOOGLE_PICKER_API_KEY = os.getenv('GOOGLE_PICKER_API_KEY')
+MICROSOFT_CLIENT_ID = os.getenv('MICROSOFT_CLIENT_ID')
+
 # DJANGO_SECRET_KEY *should* be specified in the environment. If it's not, generate an ephemeral key.
 if 'DJANGO_SECRET_KEY' in os.environ:
     SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 else:
     # Use if/else rather than a default value to avoid calculating this if we don't need it
-    print("WARNING: DJANGO_SECRET_KEY not found in os.environ. Generating ephemeral SECRET_KEY.")
+    print("WARNING: DJANGO_SaaECRET_KEY not found in os.environ. Generating ephemeral SECRET_KEY.")
     SECRET_KEY = ''.join([random.SystemRandom().choice(string.printable) for i in range(50)])
 
 # Make sure Django can detect a secure connection properly on Heroku:

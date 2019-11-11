@@ -39,6 +39,7 @@ INSTALLED_APPS = [
 
     'wagtail_content_import',
     'wagtail_content_import.pickers.google',
+    'wagtail_content_import.pickers.microsoft',
     "wagtail.contrib.table_block",
     'wagtail.contrib.search_promotions',
     'wagtail.contrib.forms',
@@ -180,3 +181,5 @@ WAGTAILSEARCH_BACKENDS = {
 
 # Wagtail settings
 WAGTAIL_SITE_NAME = "bakerydemo"
+
+

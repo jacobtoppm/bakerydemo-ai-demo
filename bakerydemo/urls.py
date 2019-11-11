@@ -7,6 +7,8 @@ from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.contrib.sitemaps.views import sitemap
 from wagtail.core import urls as wagtail_urls
 
+from wagtail_content_import import urls as wagtail_content_import_urls
+
 from bakerydemo.search import views as search_views
 from .api import api_router
 
@@ -21,7 +23,6 @@ urlpatterns = [
     url(r'^sitemap\.xml$', sitemap),
     url(r'^api/v2/', api_router.urls),
 ]
-
 
 if settings.DEBUG:
     from django.conf.urls.static import static
@@ -47,5 +48,6 @@ if settings.DEBUG:
     ]
 
 urlpatterns += [
+    url(r'', include(wagtail_content_import_urls)),
     url(r'', include(wagtail_urls)),
 ]
