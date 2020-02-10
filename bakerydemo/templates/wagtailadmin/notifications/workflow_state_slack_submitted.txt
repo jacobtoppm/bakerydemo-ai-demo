@@ -1,0 +1,12 @@
+{% load i18n %}
+{
+	"blocks": [
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "{% blocktrans with workflow=workflow.name page=page.get_admin_display_title %}The page '{{ page }}' has been submitted for moderation to workflow '{{ workflow }}'.{% endblocktrans %}\n<{{ settings.BASE_URL }}{% url 'wagtailadmin_pages:edit' page.id %}|Edit>"
+			}
+		}
+	]
+}

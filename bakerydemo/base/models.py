@@ -369,3 +369,8 @@ class FormPage(AbstractEmailForm):
             FieldPanel('subject'),
         ], "Email"),
     ]
+
+from wagtail.core.models import TaskState
+
+class MyTaskState(TaskState):
+    test = models.ManyToManyField(People)

@@ -62,5 +62,5 @@ class BakeryModelAdminGroup(ModelAdminGroup):
 
 # When using a ModelAdminGroup class to group several ModelAdmin classes together,
 # you only need to register the ModelAdminGroup class with Wagtail:
-modeladmin_register(BreadModelAdminGroup)
-modeladmin_register(BakeryModelAdminGroup)
+#modeladmin_register(BreadModelAdminGroup)
+#modeladmin_register(BakeryModelAdminGroup)

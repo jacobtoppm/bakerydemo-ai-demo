@@ -1,6 +1,7 @@
 from django.conf.urls import include, url
 from django.conf import settings
 from django.contrib import admin
+from django.urls import path
 
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
@@ -9,6 +10,8 @@ from wagtail.core import urls as wagtail_urls
 
 from bakerydemo.search import views as search_views
 from .api import api_router
+
+from wagtail_review import urls as wagtailreview_urls
 
 urlpatterns = [
     url(r'^django-admin/', admin.site.urls),
@@ -22,6 +25,12 @@ urlpatterns = [
     url(r'^api/v2/', api_router.urls),
 ]
 
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
+    SHOW_TOOLBAR_CALLBACK = True
 
 if settings.DEBUG:
     from django.conf.urls.static import static
@@ -47,5 +56,6 @@ if settings.DEBUG:
     ]
 
 urlpatterns += [
+    url(r'^review/', include(wagtailreview_urls)),
     url(r'', include(wagtail_urls)),
 ]
