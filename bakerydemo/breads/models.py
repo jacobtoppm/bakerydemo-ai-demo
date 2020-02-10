@@ -89,6 +89,26 @@ class BreadType(models.Model):
     class Meta:
         verbose_name_plural = "Bread types"
 
+from wagtail.images.blocks import ImageChooserBlock
+from wagtail.embeds.blocks import EmbedBlock
+from wagtail.core.blocks import (
+    CharBlock, ChoiceBlock, RichTextBlock, StreamBlock, StructBlock, TextBlock, BooleanBlock
+)
+from django.utils.safestring import mark_safe
+
+class ImageBlock(StructBlock):
+    """
+    Image selection within body content
+    """
+
+    show_full_image = BooleanBlock(required=False)
+    image = ImageChooserBlock()
+
+    class Meta:
+        icon = "image / picture"
+        admin_text = mark_safe("<b>Image Block</b>")
+        label = "Image Block"
+        template = "pages/blocks/image_block.html"
 
 class SimpleBreadPage(ContentImportMixin, Page):
     mapper_class = SimpleBreadMapper
@@ -96,7 +116,7 @@ class SimpleBreadPage(ContentImportMixin, Page):
     body = StreamField([
         ('heading', blocks.CharBlock(classname="full title")),
         ('paragraph', blocks.RichTextBlock()),
-        ('image', ImageChooserBlock()),
+        ('image', ImageBlock()),
         ('table', TableBlock())
     ])
 
