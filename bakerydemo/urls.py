@@ -9,11 +9,13 @@ from wagtail.contrib.sitemaps.views import sitemap
 from wagtail.core import urls as wagtail_urls
 
 from bakerydemo.search import views as search_views
+from bakerydemo.workflow import urls as workflow_urls
 from .api import api_router
 
 urlpatterns = [
     path('django-admin/', admin.site.urls),
 
+    path('admin/', include(workflow_urls)),
     path('admin/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
 

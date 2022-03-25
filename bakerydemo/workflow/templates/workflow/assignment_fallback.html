@@ -1,0 +1,10 @@
+<fieldset>
+    <p>
+        {% if value %}
+            Assignment size: {{ value }}
+        {% else %}
+            No assignment size has been selected for this page. It can't be submitted for moderation
+            until one has been chosen.
+        {% endif %}
+    </p>
+</fieldset>

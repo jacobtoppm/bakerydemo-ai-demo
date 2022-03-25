@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'bakerydemo.workflow',
     'bakerydemo.base',
     'bakerydemo.blog',
     'bakerydemo.breads',
@@ -183,3 +184,6 @@ WAGTAILSEARCH_BACKENDS = {
 
 # Wagtail settings
 WAGTAIL_SITE_NAME = "bakerydemo"
+
+WAGTAIL_FINISH_WORKFLOW_ACTION = 'bakerydemo.workflow.utils.pay_author_and_publish'
+WAGTAIL_WORKFLOW_CANCEL_ON_PUBLISH = False
