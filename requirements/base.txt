@@ -1,5 +1,5 @@
-Django>=4.0,<4.1
+Django>=3.2,<4.0
 django-dotenv==1.4.1
-wagtail>=2.16,<2.17
+./requirements/wagtail-2.17a0-py3-none-any.whl
 wagtailfontawesome>=1.1.3,<1.2
 django-debug-toolbar>=3.2,<4
