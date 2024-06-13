@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailimages_tags %}
+{% load wagtailimages_tags wagtailcore_tags %}
 
 {% block content %}
     {% include "base/include/header-hero.html" %}
@@ -53,6 +53,15 @@
                                     </ul>
                                 {% endif %}
                             {% endwith %}
+
+                            <p class="bread-detail__meta-title">You might also be interested in:</p>
+                            <ul class="bread-detail__meta-content">
+                                {% for bread in similar_breads %}
+                                    <li>
+                                        <a href="{% pageurl bread %}">{{ bread.title }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
                         </div>
                     </div>
                 </div>

@@ -171,6 +171,12 @@ class BreadPage(VectorIndexedMixin, Page):
 
     parent_page_types = ["BreadsIndexPage"]
 
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        # Don't calculate this at request time on a real project!
+        context["similar_breads"] = self.vector_index.similar(self)
+        return context
+
 
 class BreadsIndexPage(VectorIndexedMixin, Page):
     """
