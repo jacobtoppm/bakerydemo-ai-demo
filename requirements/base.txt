@@ -8,3 +8,4 @@ django-csp==3.7
 dj-database-url==2.1.0
 wagtail-vector-index[llm, numpy]
 django-htmx
+wagtail-ai

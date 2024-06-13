@@ -37,6 +37,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "wagtail_ai",
     "django_htmx",
     "wagtail_vector_index",
     "bakerydemo.base",
@@ -257,3 +258,18 @@ WAGTAIL_VECTOR_INDEX = {
         }
     },
 }
+
+WAGTAIL_AI = {
+    "BACKENDS": {
+        "default": {
+            "CLASS": "wagtail_ai.ai.llm.LLMBackend",
+            "CONFIG": {
+                # Model ID recognizable by the "LLM" library.
+                "MODEL_ID": "gpt-4o",
+                "TOKEN_LIMIT": 111111
+            },
+        }
+    }
+}
+
+WAGTAILIMAGES_IMAGE_FORM_BASE = "wagtail_ai.forms.DescribeImageForm"
