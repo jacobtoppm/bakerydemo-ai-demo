@@ -1,0 +1,36 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<p class="search__introduction htmx-indicator">Finding your answer...</p>
+{% if query %}
+<p class="search__introduction">You asked “{{ query }}”</p>
+<ul class="search__results">
+    <p> {{ result.response }}</p>
+    <h2>Sources</h2>
+    {% for source in result.sources %}
+        <li class="listing-card">
+            <a class="listing-card__link" href="{% pageurl source.specific %}">
+                {% if source.specific.image %}
+                    <figure class="listing-card__image">
+                        {% picture source.specific.image format-{avif,webp,jpeg} fill-180x180-c100 loading="lazy" %}
+                    </figure>
+                {% endif %}
+                <div class="listing-card__contents">
+                    <h3 class="listing-card__title">{{ source.specific }}</h3>
+                    <p class="listing-card__content-type">
+                        {% if result.specific.content_type.model == "blogpage" %}
+                            Blog Post
+                        {% elif result.specific.content_type.model == "locationpage" %}
+                            Location
+                        {% else %}
+                            Bread
+                        {% endif %}
+                    </p>
+                    <p class="listing-card__description">
+                        {% if result.specific.search_description %}{{ source.specific.search_description|richtext }}{% endif %}
+                    </p>
+                </div>
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+{% endif %}

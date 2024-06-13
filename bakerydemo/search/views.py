@@ -55,9 +55,14 @@ def ai_query(request):
     if query:
         result = index.query(query)
 
+    if request.htmx:
+        base_template = "search/includes/question_answer.html"
+    else:
+        base_template = "search/question.html"
+
     return render(
         request,
-        "search/question.html",
+        base_template,
         {
             "query": query,
             "result": result if query else None
