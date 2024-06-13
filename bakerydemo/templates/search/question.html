@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block title %}Ask a question{% endblock %}
+
+{% block search_description %}Query results{% endblock %}
+
+{% block body_class %}template-search-results{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <h1>Ask a question</h1>
+                    <form action="" method="get" class="navigation__search" role="search">
+                        <input class="navigation__search-input" id="question-input" type="text" placeholder="What do you want to know?" autocomplete="off" name="q">
+                    </form>
+                    <p class="search__introduction">You asked{% if query %} “{{ query }}”{% endif %}</p>
+                    <ul class="search__results">
+                        <p> {{ result.response }}</p>
+                        <h2>Sources</h2>
+                        {% for source in result.sources %}
+                            <li class="listing-card">
+                                <a class="listing-card__link" href="{% pageurl source.specific %}">
+                                    {% if source.specific.image %}
+                                        <figure class="listing-card__image">
+                                            {% picture source.specific.image format-{avif,webp,jpeg} fill-180x180-c100 loading="lazy" %}
+                                        </figure>
+                                    {% endif %}
+                                    <div class="listing-card__contents">
+                                        <h3 class="listing-card__title">{{ source.specific }}</h3>
+                                        <p class="listing-card__content-type">
+                                            {% if result.specific.content_type.model == "blogpage" %}
+                                                Blog Post
+                                            {% elif result.specific.content_type.model == "locationpage" %}
+                                                Location
+                                            {% else %}
+                                                Bread
+                                            {% endif %}
+                                        </p>
+                                        <p class="listing-card__description">
+                                            {% if result.specific.search_description %}{{ source.specific.search_description|richtext }}{% endif %}
+                                        </p>
+                                    </div>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

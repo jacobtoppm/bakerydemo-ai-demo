@@ -51,10 +51,19 @@ class AllPagesEmbeddableFieldsVectorIndex(PageEmbeddableFieldsVectorIndex):
 
 def ai_query(request):
     index = AllPagesEmbeddableFieldsVectorIndex()
-    search_query = request.GET.get("q", None)
-    if search_query:
-        result = index.query(search_query)
-        print(result)
+    query = request.GET.get("q", None)
+    if query:
+        result = index.query(query)
+
+    return render(
+        request,
+        "search/question.html",
+        {
+            "query": query,
+            "result": result if query else None
+        },
+    )
+
 
 
 def search(request):
