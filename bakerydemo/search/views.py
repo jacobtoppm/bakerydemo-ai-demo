@@ -2,11 +2,59 @@ from django.conf import settings
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.shortcuts import render
 from wagtail.contrib.search_promotions.models import Query
-from wagtail.models import Page
+from wagtail.models import Page, get_page_models
+from wagtail_vector_index.index.registry import registry
 
 from bakerydemo.blog.models import BlogPage
 from bakerydemo.breads.models import BreadPage
 from bakerydemo.locations.models import LocationPage
+
+from wagtail_vector_index.index.models import PageEmbeddableFieldsVectorIndex, VectorIndexedMixin
+
+from wagtail_vector_index.index.exceptions import IndexedTypeFromDocumentError
+from wagtail_vector_index.index.models import EmbeddableFieldsDocumentConverter
+
+class SimilarPageDocumentConverter(EmbeddableFieldsDocumentConverter):
+    def bulk_from_documents(
+        self, documents
+    ):
+        docs = [doc for doc in documents]
+        pages = {
+            f"{p.pk}:{p.content_type_id}": p
+            for p in self.base_model.objects.filter(
+                pk__in={d.metadata["object_id"] for d in docs}
+            )
+        }
+        for doc in docs:
+            lookup_key = (
+                f"{doc.metadata['object_id']}:{doc.metadata['content_type_id']}"
+            )
+            try:
+                yield pages[lookup_key]
+            except KeyError as e:
+                raise IndexedTypeFromDocumentError(
+                    "No object found for document"
+                ) from e
+
+@registry.register()
+class AllPagesEmbeddableFieldsVectorIndex(PageEmbeddableFieldsVectorIndex):
+    querysets = [
+        model.objects.all() for model in get_page_models() if issubclass(model, VectorIndexedMixin)
+    ]
+
+    def get_converter_class(self):
+        return SimilarPageDocumentConverter
+
+    def get_converter(self):
+        return self.get_converter_class()(Page)
+
+
+def ai_query(request):
+    index = AllPagesEmbeddableFieldsVectorIndex()
+    search_query = request.GET.get("q", None)
+    if search_query:
+        result = index.query(search_query)
+        print(result)
 
 
 def search(request):

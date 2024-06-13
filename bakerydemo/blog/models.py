@@ -12,6 +12,8 @@ from wagtail.fields import StreamField
 from wagtail.models import Orderable, Page
 from wagtail.search import index
 
+from wagtail_vector_index.index.models import VectorIndexedMixin, EmbeddingField
+
 from bakerydemo.base.blocks import BaseStreamBlock
 
 
@@ -45,7 +47,7 @@ class BlogPageTag(TaggedItemBase):
     )
 
 
-class BlogPage(Page):
+class BlogPage(VectorIndexedMixin, Page):
     """
     A Blog Page
 
@@ -69,6 +71,8 @@ class BlogPage(Page):
     subtitle = models.CharField(blank=True, max_length=255)
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
     date_published = models.DateField("Date article published", blank=True, null=True)
+
+    embedding_fields = [EmbeddingField("title"), EmbeddingField("introduction"), EmbeddingField("body")]
 
     content_panels = Page.content_panels + [
         FieldPanel("subtitle"),
@@ -128,7 +132,7 @@ class BlogPage(Page):
     subpage_types = []
 
 
-class BlogIndexPage(RoutablePageMixin, Page):
+class BlogIndexPage(VectorIndexedMixin, RoutablePageMixin, Page):
     """
     Index page for blogs.
     We need to alter the page model's context to return the child page objects,
@@ -147,6 +151,8 @@ class BlogIndexPage(RoutablePageMixin, Page):
         related_name="+",
         help_text="Landscape mode only; horizontal width between 1000px and 3000px.",
     )
+
+    embedding_fields = [EmbeddingField("title"), EmbeddingField("introduction")]
 
     content_panels = Page.content_panels + [
         FieldPanel("introduction"),

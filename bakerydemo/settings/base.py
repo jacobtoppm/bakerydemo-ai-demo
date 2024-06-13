@@ -37,6 +37,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "wagtail_vector_index",
     "bakerydemo.base",
     "bakerydemo.blog",
     "bakerydemo.breads",
@@ -234,3 +235,23 @@ if "CSP_DEFAULT_SRC" in os.environ:
         CSP_BASE_URI = os.environ.get("CSP_BASE_URI").split(",")
     if "CSP_OBJECT_SRC" in os.environ:
         CSP_OBJECT_SRC = os.environ.get("CSP_OBJECT_SRC").split(",")
+
+WAGTAIL_VECTOR_INDEX = {
+    "CHAT_BACKENDS": {
+        "default": {
+            "CLASS": "wagtail_vector_index.ai_utils.backends.llm.LLMChatBackend",
+            "CONFIG": {
+                "MODEL_ID": "gpt-4o",
+                "TOKEN_LIMIT": 111111
+            },
+        },
+    },
+    "EMBEDDING_BACKENDS": {
+        "default": {
+            "CLASS": "wagtail_vector_index.ai_utils.backends.llm.LLMEmbeddingBackend",
+            "CONFIG": {
+                "MODEL_ID": "ada-002",
+            },
+        }
+    },
+}

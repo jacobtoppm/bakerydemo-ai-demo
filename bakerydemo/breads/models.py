@@ -8,6 +8,8 @@ from wagtail.fields import StreamField
 from wagtail.models import DraftStateMixin, Page, RevisionMixin
 from wagtail.search import index
 
+from wagtail_vector_index.index.models import VectorIndexedMixin, EmbeddingField
+
 from bakerydemo.base.blocks import BaseStreamBlock
 
 
@@ -97,7 +99,7 @@ class BreadType(RevisionMixin, models.Model):
         verbose_name_plural = "bread types"
 
 
-class BreadPage(Page):
+class BreadPage(VectorIndexedMixin, Page):
     """
     Detail view for a specific bread
     """
@@ -135,6 +137,16 @@ class BreadPage(Page):
     )
     ingredients = ParentalManyToManyField("BreadIngredient", blank=True)
 
+    embedding_fields = [EmbeddingField("title"), EmbeddingField("introduction"), EmbeddingField("body"), EmbeddingField("country"), EmbeddingField("breadtype")]
+
+    @property
+    def country(self):
+        return self.origin.title if self.origin else None
+
+    @property
+    def breadtype(self):
+        return self.bread_type.title if self.bread_type else None
+
     content_panels = Page.content_panels + [
         FieldPanel("introduction"),
         FieldPanel("image"),
@@ -160,7 +172,7 @@ class BreadPage(Page):
     parent_page_types = ["BreadsIndexPage"]
 
 
-class BreadsIndexPage(Page):
+class BreadsIndexPage(VectorIndexedMixin, Page):
     """
     Index page for breads.
 
@@ -178,6 +190,8 @@ class BreadsIndexPage(Page):
         related_name="+",
         help_text="Landscape mode only; horizontal width between 1000px and " "3000px.",
     )
+
+    embedding_fields = [EmbeddingField("title"), EmbeddingField("introduction")]
 
     content_panels = Page.content_panels + [
         FieldPanel("introduction"),
